@@ -24,8 +24,8 @@ public function view(User $user, Book $book): bool
   $team = Team::find($book->team_id);
 
   return $user->belongsToTeam($team) &&
-    $user->hasTeamPermission($team, 'read') &&
-    $user->tokenCan('read');
+    $user->hasTeamPermission($team, 'books:read') &&
+    $user->tokenCan('books:read');
 }
 
   /**
@@ -37,8 +37,8 @@ public function view(User $user, Book $book): bool
     $team = Team::find($team_id);
 
     return $user->belongsToTeam($team) &&
-      $user->hasTeamPermission($team, 'create') &&
-      $user->tokenCan('create');
+      $user->hasTeamPermission($team, 'books:create') &&
+      $user->tokenCan('books:create');
   }
 
   /**
@@ -49,8 +49,8 @@ public function view(User $user, Book $book): bool
     $team = Team::find($book->team_id);
 
     return $user->belongsToTeam($team) &&
-      $user->hasTeamPermission($team, 'update') &&
-      $user->tokenCan('update');
+      $user->hasTeamPermission($team, 'books:update') &&
+      $user->tokenCan('books:update');
   }
 
   /**
@@ -61,8 +61,8 @@ public function view(User $user, Book $book): bool
     $team = Team::find($book->team_id);
 
     return $user->belongsToTeam($team) &&
-      $user->hasTeamPermission($team, 'delete') &&
-      $user->tokenCan('delete');
+      $user->hasTeamPermission($team, 'books:delete') &&
+      $user->tokenCan('books:delete');
   }
 
   // /**
