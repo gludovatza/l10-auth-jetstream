@@ -35,7 +35,10 @@ public function __construct()
     $validated = $request->validated();
     $validated['team_id'] = auth()->user()->currentTeam->id;
 
-    return BookResource::make(Book::create($validated));
+    return response()->json([
+      'data' => BookResource::make(Book::create($validated)),
+      'message' => 'Book created'
+    ], Response::HTTP_CREATED);
   }
 
   public function update(UpdateBookRequest $request, Book $book)
