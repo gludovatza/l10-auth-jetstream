@@ -5,8 +5,6 @@ namespace App\Policies;
 use App\Models\Book;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Auth;
 
 class BookPolicy
 {
@@ -21,19 +19,26 @@ class BookPolicy
   /**
    * Determine whether the user can view the model.
    */
-  public function view(User $user, Book $book): bool
-  {
-    $team = Team::find($book->team_id);
+public function view(User $user, Book $book): bool
+{
+  $team = Team::find($book->team_id);
 
-    return $user->hasTeamPermission($team, 'read');
-  }
+  return $user->belongsToTeam($team) &&
+    $user->hasTeamPermission($team, 'read') &&
+    $user->tokenCan('read');
+}
 
   /**
    * Determine whether the user can create models.
    */
   public function create(User $user): bool
   {
-    return $user->hasTeamPermission($user->currentTeam, 'create');
+    $team_id = request('currentTeam') ?? $user->currentTeam->id;
+    $team = Team::find($team_id);
+
+    return $user->belongsToTeam($team) &&
+      $user->hasTeamPermission($team, 'create') &&
+      $user->tokenCan('create');
   }
 
   /**
@@ -43,7 +48,9 @@ class BookPolicy
   {
     $team = Team::find($book->team_id);
 
-    return $user->hasTeamPermission($team, 'update');
+    return $user->belongsToTeam($team) &&
+      $user->hasTeamPermission($team, 'update') &&
+      $user->tokenCan('update');
   }
 
   /**
@@ -53,7 +60,9 @@ class BookPolicy
   {
     $team = Team::find($book->team_id);
 
-    return $user->hasTeamPermission($team, 'delete');
+    return $user->belongsToTeam($team) &&
+      $user->hasTeamPermission($team, 'delete') &&
+      $user->tokenCan('delete');
   }
 
   // /**
